@@ -1,0 +1,26 @@
+version: '3.5'
+services:
+  db:
+    container_name: sqlite
+    image: keinos/sqlite3:latest
+    networks:
+      - metronews_net
+    volumes:
+      - ./data:/tmp
+  metro-news:
+    container_name: metro-news
+    build: .
+    depends_on:
+      - db
+    networks:
+      metronews_net:
+        ipv4_address: 172.19.0.105
+    ports:
+      - 6000:5000
+networks:
+  metronews_net:
+    name: metronews_net
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.19.0.0/16
