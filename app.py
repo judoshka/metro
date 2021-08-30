@@ -14,7 +14,7 @@ def create_app():
 
     cron = APScheduler()
     cron.init_app(app)
-    cron.add_job(id='scraper', func=scrape_data, trigger='interval', seconds=10, args=(app,))
+    cron.add_job(id='scraper', func=scrape_data, trigger='interval', minutes=10, args=(app,))
     cron.start()
 
     @app.route('/metro/news')
