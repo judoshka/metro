@@ -14,7 +14,7 @@ def create_app():
         DB.init_app(app)
     cron = APScheduler()
     cron.init_app(app)
-    cron.add_job(id='scraper', func=scrape_data, trigger='interval', seconds=10, args=(app,))
+    cron.add_job(id='scraper', func=scrape_data, trigger='interval', minutes=10, args=(app,))
     cron.start()
 
     @app.route('/metro/news')
@@ -52,4 +52,4 @@ def create_app():
 
 if __name__ == '__main__':
     APP = create_app()
-    APP.run(host="0.0.0.0", debug=True, port=5010)
+    APP.run(host="0.0.0.0", debug=True, port=5000)
