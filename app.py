@@ -2,19 +2,19 @@ from flask_apscheduler import APScheduler
 from flask import Flask, request, Response, jsonify
 from scrape import scrape_data
 from datetime import date, timedelta
-from models import DB, Post
+from models import DB, Post, DATABASE_URI
 
 
 def create_app():
     app = Flask(__name__)
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:////tmp/test.db"
+    app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URI
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config['JSON_AS_ASCII'] = False
-    DB.init_app(app)
-
+    with app.app_context():
+        DB.init_app(app)
     cron = APScheduler()
     cron.init_app(app)
-    cron.add_job(id='scraper', func=scrape_data, trigger='interval', minutes=10, args=(app,))
+    cron.add_job(id='scraper', func=scrape_data, trigger='interval', seconds=10, args=(app,))
     cron.start()
 
     @app.route('/metro/news')
@@ -52,4 +52,4 @@ def create_app():
 
 if __name__ == '__main__':
     APP = create_app()
-    APP.run(host="0.0.0.0", debug=True)
+    APP.run(host="0.0.0.0")

@@ -6,7 +6,7 @@ services:
     networks:
       - metronews_net
     volumes:
-      - ./data:/tmp
+      - ./data:/data
   metro-news:
     container_name: metro-news
     build: .

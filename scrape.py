@@ -44,6 +44,9 @@ def parse(markup, last_news_number):
         href = BASE_URL + href
 
         news_number = int(href.split("/")[-2])
+        news = Post.query.filter(Post.news_number == news_number).first()
+        if news:
+            break
         if last_news_number >= news_number:  # новые новости закончились
             break
 
@@ -71,7 +74,6 @@ def scrape_data(app):
     with app.app_context():
         records = Post.query.all()
         last_record_id = max([i.news_number for i in records]) if records else 0
-        print(last_record_id)
         search_url = BASE_URL + '/press/news/'
         content = get_html(search_url)
         soup = BeautifulSoup(content, 'html.parser')
